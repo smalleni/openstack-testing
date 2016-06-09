@@ -1,4 +1,4 @@
-ROUTER_ID="dc371dee-800d-4984-ba66-afb01ff77ba1"
+ROUTER_ID="75f17462-216d-4113-a8da-199ab6e20cad"
 IMAGE_NAME="centos7"
 GUEST_SIZE="m1.small"
 KEYSTONERC_ADMIN="/home/stack/overcloudrc"
@@ -13,7 +13,7 @@ else
 fi
 RUN=0
 if [ -z $1 ] ; then
- RUN=50
+ RUN=1
 else
  echo Run : $1
  RUN=$1
@@ -46,10 +46,11 @@ do
       fi
     done
   echo "Accessing console log"
-  METADATA=`nova console-log $INSTANCE_ID | grep $SEARCH_STRING`
   TRY=0
+  METADATA=""
   while true
   do
+    METADATA=`nova console-log $INSTANCE_ID | grep "${SEARCH_STRING}"`
     if ! [ -z "$METADATA" ] ; then
       echo "Metadata for instance ${INSTANCE_ID} on network ${NETWORK} injected"
       COUNT=$((COUNT+1))
@@ -57,7 +58,7 @@ do
     else
       echo "Sleeping waiting for metadata to be injected"
       sleep 10
-      if [ $TRY -eq 3 ]; then
+      if [ $TRY -eq 15 ]; then
         echo "Metadata no longer working"
         echo "Total networks attached to router is ${COUNT}"
         break 2
