@@ -36,7 +36,7 @@ run_command_in_oc_image() {
 }
 install_odl_repo() {
       mount_oc_image
-      sudo sh -c 'cat << EOF > TMP_OC_IMAGE_MOUNT_PATH/etc/yum.repos.d/odl.repo
+      sudo sh -c 'cat << EOF > $TMP_OC_IMAGE_MOUNT_PATH/etc/yum.repos.d/odl.repo
 [opendaylight-5-testing]
 name=CentOS CBS OpenDaylight Boron testing repository
 baseurl=http://cbs.centos.org/repos/nfv7-opendaylight-5-testing/$basearch/os/
