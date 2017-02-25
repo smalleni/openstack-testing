@@ -5,7 +5,7 @@ mkdir $node_type
 pushd $node_type > /dev/null
 for uuid in $uuids; do
     node=$(ironic node-show $uuid | grep $node_type)
-    if [ "$node" != 0 ]
+    if [ "$node" != "" ]
         then
             swift -q -U service:ironic -K $PASSWD download ironic-inspector inspector_data-$uuid 2> /dev/null
     fi
