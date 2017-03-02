@@ -22,6 +22,6 @@ for ip in `openstack server list -f value -c Networks | sed s/ctlplane=//`
                        echo Ironic node $node is not pingable >> unreachable.txt
                fi
            fi
-           TRY=$(TRY+1)
+           TRY=$((TRY+1))
        done
     done
