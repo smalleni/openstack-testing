@@ -1,0 +1,10 @@
+parameter_defaults:  
+  ControllerCount: 3
+  ComputeCount: 1
+  ServiceApiCount: 3
+  ObjectStorageCount: 0
+
+  OvercloudControlFlavor: control
+  OvercloudComputeFlavor: compute
+  OvercloudServiceApiFlavor: serviceapi
+  OvercloudSwiftStorageFlavor: swift-storage
