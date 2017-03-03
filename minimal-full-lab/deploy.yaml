@@ -1,9 +1,8 @@
 parameter_defaults:  
   ControllerCount: 1
-  ComputeCount: 0
-  R620ComputeCount: 1
+  ComputeCount: 1
   ObjectStorageCount: 0
 
   OvercloudControlFlavor: control
-  OvercloudR620ComputeFlavor: compute
+  OvercloudComputeFlavor: compute
   OvercloudSwiftStorageFlavor: swift-storage

@@ -96,7 +96,7 @@
     - OS::TripleO::Services::FluentdClient
     - OS::TripleO::Services::VipHosts
 
-- name: R620Compute
+- name: Compute
   CountDefault: 1
   HostnameFormatDefault: '%stackname%-compute-%index%'
   ServicesDefault:
