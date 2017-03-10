@@ -12,12 +12,12 @@ for ip in `openstack server list -f value -c Networks | sed s/ctlplane=//`
                then
                    echo Ironic node $node is pingable always >> reachable.txt
                    break
-           elif [ "$count" -lt 5 && "$count" -gt 0]
+           elif [ "$count" -lt 5 && "$count" -gt 0 ]
                then
                    echo Ironic node $node is pingable intermittently >> intermittent.txt
                    break
            else
-               if [ "$TRY" -eq 1]
+               if [ "$TRY" -eq 1 ]
                    then
                        echo Ironic node $node is not pingable >> unreachable.txt
                fi
