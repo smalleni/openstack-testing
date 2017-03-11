@@ -10,16 +10,16 @@ for ip in `openstack server list -f value -c Networks | sed s/ctlplane=//`
            count=$(ping -c 5 $ip | grep received | awk {'print $4'})
            if [ "$count" -eq 5 ]
                then
-                   echo Ironic node $node is pingable always >> reachable.txt
+                   echo $node >> reachable.txt
                    break
-           elif [ "$count" -lt 5 && "$count" -gt 0 ]
+           elif [ "$count" -lt 5 ] && [ "$count" -gt 0 ]
                then
-                   echo Ironic node $node is pingable intermittently >> intermittent.txt
+                   echo $node >> intermittent.txt
                    break
            else
                if [ "$TRY" -eq 1 ]
                    then
-                       echo Ironic node $node is not pingable >> unreachable.txt
+                       echo $node >> unreachable.txt
                fi
            fi
            TRY=$((TRY+1))
