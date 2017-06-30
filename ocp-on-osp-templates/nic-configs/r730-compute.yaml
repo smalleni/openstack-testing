@@ -133,7 +133,7 @@ resources:
                   name: em2 
                   primary: true
                 
-             -
+            -
               type: ovs_bridge
               name: br-internal
               members:
@@ -143,7 +143,7 @@ resources:
                   primary: true
                 -
                   type: vlan
-                  vlan_id: {get_param: InternalApiVlanID}
+                  vlan_id: {get_param: InternalApiNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: InternalApiIpSubnet}

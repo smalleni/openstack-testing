@@ -33,10 +33,6 @@ parameters:
     default: ''
     description: IP address/subnet on the management network
     type: string
-  ExternalNetworkVlanID:
-    default: 10
-    description: Vlan ID for the internal_api network traffic.
-    type: number
   InternalApiNetworkVlanID:
     default: 20
     description: Vlan ID for the internal_api network traffic.
@@ -52,10 +48,6 @@ parameters:
   ManagementNetworkVlanID:
     default: 60
     description: Vlan ID for the management network traffic.
-    type: number
-  StorageMgmtNetworkVlanID:
-    default: 70
-    description: Vlan ID for the storage management network traffic.
     type: number
   ControlPlaneSubnetCidr: # Override this via parameter_defaults
     default: '24'
@@ -90,7 +82,7 @@ resources:
           network_config:
             -
               type: ovs_bridge
-              name: br-storage 
+              name: br-storage
               members:
                 -
                   type: interface
@@ -104,11 +96,11 @@ resources:
                       ip_netmask: {get_param: StorageIpSubnet}
             -
               type: ovs_bridge
-              name: br-tenant 
+              name: br-tenant
               members:
                 -
                   type: interface
-                  name: em3
+                  name: p1p1
                   primary: true
                 -
                   type: vlan
@@ -118,7 +110,7 @@ resources:
                       ip_netmask: {get_param: TenantIpSubnet}
             -
               type: ovs_bridge
-              name: {get_input: bridge_name}
+              name: br-ex
               use_dhcp: false
               dns_servers: {get_param: DnsServers}
               addresses:
@@ -138,36 +130,23 @@ resources:
               members:
                 -
                   type: interface
-                  name: em2 
+                  name: em2
                   primary: true
+
+            -
+              type: ovs_bridge
+              name: br-internal
+              members:
                 -
-                  type: vlan
-                  vlan_id: {get_param: ExternalNetworkVlanID}
-                  addresses:
-                    -
-                      ip_netmask: {get_param: ExternalIpSubnet}
+                  type: interface
+                  name: p1p2
+                  primary: true
                 -
                   type: vlan
                   vlan_id: {get_param: InternalApiNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: InternalApiIpSubnet}
-
-            -
-              type: ovs_bridge
-              name: br-management
-              members:
-                -
-                  type: interface
-                  name: em4
-                  primary: true
-                -
-                  type: vlan
-                  vlan_id: {get_param: StorageMgmtNetworkVlanID}
-                  addresses:
-                    -
-                      ip_netmask: {get_param: StorageMgmtIpSubnet}
-
 
 outputs:
   OS::stack_id:

@@ -5,8 +5,9 @@ resource_registry:
   OS::TripleO::R730CephStorage::Net::SoftwareConfig: nic-configs/r730-ceph.yaml
   OS::TripleO::R630Compute::Net::SoftwareConfig: nic-configs/r630-compute.yaml
   OS::TripleO::R730Compute::Net::SoftwareConfig: nic-configs/r730-compute.yaml
+  OS::TripleO::R730Compute::Net::SoftwareConfig: nic-configs/r930-compute.yaml
   OS::TripleO::R620Compute::Net::SoftwareConfig: nic-configs/r620-compute.yaml
-  OS::TripleO::R6048CephStorage::Net::SoftwareConfig: nic-configs/r6048-ceph.yaml
+  OS::TripleO::R6048CephStorage::Net::SoftwareConfig: nic-configs/r730-ceph.yaml
   OS::TripleO::R630Compute::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::R630Compute::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
   OS::TripleO::R630Compute::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
@@ -17,13 +18,18 @@ resource_registry:
   OS::TripleO::R730Compute::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
   OS::TripleO::R730Compute::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::R730Compute::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+  OS::TripleO::R930Compute::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::R930Compute::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::R930Compute::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::R930Compute::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::R930Compute::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
   OS::TripleO::R620Compute::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::R620Compute::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
   OS::TripleO::R620Compute::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
   OS::TripleO::R620Compute::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::R620Compute::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
   OS::TripleO::R730CephStorage::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
-  OS::TripleO::R730CephStorage::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::R730CephStora4ge::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
   OS::TripleO::R730CephStorage::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
   OS::TripleO::R730CephStorage::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
   OS::TripleO::R730CephStorage::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
@@ -37,25 +43,26 @@ resource_registry:
 
 parameter_defaults:
   NeutronExternalNetworkBridge: "''"
-  InternalApiNetCidr: 172.16.0.0/24
-  TenantNetCidr: 172.17.0.0/24
-  StorageNetCidr: 172.18.0.0/24
-  StorageMgmtNetCidr: 172.19.0.0/24
-  ManagementNetCidr: 172.20.0.0/24
-  ExternalNetCidr: 172.21.0.0/24
-  InternalApiAllocationPools: [{'start': '172.16.0.10', 'end': '172.16.0.200'}]
-  TenantAllocationPools: [{'start': '172.17.0.10', 'end': '172.17.0.200'}]
-  StorageAllocationPools: [{'start': '172.18.0.10', 'end': '172.18.0.200'}]
-  StorageMgmtAllocationPools: [{'start': '172.19.0.10', 'end': '172.19.0.200'}]
-  ManagementAllocationPools: [{'start': '172.20.0.10', 'end': '172.20.0.200'}]
-  ExternalAllocationPools: [{'start': '172.21.0.10', 'end': '172.21.0.100'}]
+  NeutronBridgeMappings: "datacentre:br-external"
+  InternalApiNetCidr: 192.168.25.0/24
+  TenantNetCidr: 192.168.26.0/24
+  StorageNetCidr: 192.168.27.0/24
+  StorageMgmtNetCidr: 192.168.28.0/24
+  ManagementNetCidr: 192.168.29.0/24
+  ExternalNetCidr: 192.168.30.0/24
+  InternalApiAllocationPools: [{'start': '192.168.25.10', 'end': '192.168.25.210'}]
+  TenantAllocationPools: [{'start': '192.168.26.10', 'end': '192.168.26.210'}]
+  StorageAllocationPools: [{'start': '192.168.27.10', 'end': '192.168.27.210'}]
+  StorageMgmtAllocationPools: [{'start': '192.168.28.10', 'end': '192.168.28.210'}]
+  ManagementAllocationPools: [{'start': '192.168.29.10', 'end': '192.168.29.210'}]
+  ExternalAllocationPools: [{'start': '192.168.30.10', 'end': '192.168.30.210'}]
   # Set to the router gateway on the external network
-  ExternalInterfaceDefaultRoute: 172.21.0.1
-  PublicVirtualFixedIPs: [{'ip_address':'172.21.0.10'}]
+  ExternalInterfaceDefaultRoute: 192.168.30.1
+  #PublicVirtualFixedIPs: [{'ip_address':'172.21.0.10'}]
   # Gateway router for the provisioning network (or Undercloud IP)
-  ControlPlaneDefaultRoute: 192.0.2.1
+  ControlPlaneDefaultRoute: 192.168.24.1
   # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
-  EC2MetadataIp: 192.0.2.1
+  EC2MetadataIp: 192.168.24.1
   # Define the DNS servers (maximum 2) for the overcloud nodes
   DnsServers: ["10.11.5.19"]
   InternalApiNetworkVlanID: 301

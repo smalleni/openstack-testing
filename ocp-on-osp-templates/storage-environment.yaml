@@ -40,20 +40,35 @@ parameter_defaults:
         pgp_num: 4096
   R730CephStorageExtraConfig:
     ceph::profile::params::osds:
-      '/dev/sdb': {}
-      '/dev/sdc': {}
-      '/dev/sdd': {}
-      '/dev/sde': {}  
-      '/dev/sdf': {}
-      '/dev/sdg': {}
-      '/dev/sdh': {}
-      '/dev/sdi': {}
-      '/dev/sdj': {}
-      '/dev/sdk': {}
-      '/dev/sdl': {}
-      '/dev/sdm': {}
-      '/dev/sdn': {}
-      '/dev/sdo': {}
-      '/dev/sdp': {}
-      '/dev/sdq': {}
- 
+      '/dev/sdb':
+        journal: '/dev/nvme0n1'
+      '/dev/sdc':
+        journal: '/dev/nvme0n1'
+      '/dev/sdd':
+        journal: '/dev/nvme0n1'
+      '/dev/sde':
+        journal: '/dev/nvme0n1'
+      '/dev/sdf':
+        journal: '/dev/nvme0n1'
+      '/dev/sdg':
+        journal: '/dev/nvme0n1'
+      '/dev/sdh':
+        journal: '/dev/nvme0n1'
+      '/dev/sdi':
+        journal: '/dev/nvme0n1'
+      '/dev/sdj':
+        journal: '/dev/nvme0n1'
+      '/dev/sdk':
+        journal: '/dev/nvme0n1'
+      '/dev/sdl':
+        journal: '/dev/nvme0n1'
+      '/dev/sdm':
+        journal: '/dev/nvme0n1'
+      '/dev/sdn':
+        journal: '/dev/nvme0n1'
+      '/dev/sdo':
+        journal: '/dev/nvme0n1'
+      '/dev/sdp':
+        journal: '/dev/nvme0n1'
+      '/dev/sdq':
+        journal: '/dev/nvme0n1'
