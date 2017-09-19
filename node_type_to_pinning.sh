@@ -16,7 +16,7 @@ for node_type in "${!node_to_pinning[@]}"
                 if [ "$node" != "" ]
                     then
                         echo "Updating node $i with pinning ${node_to_pinning[$node_type]}-$COUNT"
-                        openstack baremetal node set $i --property capabilities=node:${node_to_pinning[$node_type]}-${COUNT},boot_option:local
+                        openstack baremetal node set $i --property capabilities=node:${node_to_pinning[$node_type]}-${COUNT},cpu_vt:true,cpu_hugepages:true,boot_option:local,cpu_txt:true,cpu_aes:true,cpu_hugepages_1g:true,boot_mode:bios
                         COUNT=$((COUNT+1))
                 fi
             done
