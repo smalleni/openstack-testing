@@ -12,11 +12,11 @@ for node_type in "${!node_to_pinning[@]}"
         echo "Setting pinning for node type $node_type"
         for i in $(openstack baremetal node list --format value -c UUID)
             do  
-                node=$(ironic node-show $i | grep $node_type)
+                node=$(openstack baremetal node show $i | grep -A 4 driver_info | grep $node_type)
                 if [ "$node" != "" ]
                     then
                         echo "Updating node $i with pinning ${node_to_pinning[$node_type]}-$COUNT"
-                        ironic node-update $i replace properties/capabilities=node:${node_to_pinning[$node_type]}-$COUNT
+                        openstack baremetal node set $i --property capabilities=node:${node_to_pinning[$node_type]}-${COUNT},boot_option:local
                         COUNT=$((COUNT+1))
                 fi
             done
