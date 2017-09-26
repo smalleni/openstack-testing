@@ -1,0 +1,61 @@
+[browbeat]
+# Pick host depending on desired install
+localhost
+#undercloud
+
+[undercloud]
+undercloud
+
+[controller]
+overcloud-controller-0
+overcloud-controller-1
+overcloud-controller-2
+
+[overcloud:children]
+controller
+
+[other]
+overcloud-r620compute-8
+overcloud-r620compute-4
+overcloud-r620compute-17
+overcloud-r620compute-13
+overcloud-r620compute-16
+overcloud-r620compute-11
+overcloud-r620compute-15
+overcloud-r620compute-18
+overcloud-r620compute-12
+overcloud-r620compute-0
+overcloud-r620compute-19
+overcloud-r620compute-14
+overcloud-r620compute-5
+overcloud-r620compute-3
+overcloud-r620compute-6
+overcloud-1029pcompute-2
+overcloud-r620compute-2
+overcloud-1029pcompute-0
+overcloud-r620compute-1
+overcloud-1029pcompute-1
+overcloud-r620compute-10
+overcloud-r620compute-7
+overcloud-r620compute-9
+overcloud-r630compute-3
+overcloud-r630compute-4
+overcloud-r630compute-2
+overcloud-r630compute-0
+overcloud-r630compute-1
+
+[graphite]
+## example host entry.
+#host-01
+
+[grafana]
+## example host entry.
+#host-02
+
+[elk]
+## example host entry.
+#host-01
+
+[elk-client]
+## example host entry.
+#host-02

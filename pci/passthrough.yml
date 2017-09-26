@@ -1,0 +1,7 @@
+---
+- hosts: all
+  remote_user: heat-admin
+  become: true
+  roles:
+    - passthrough
+ 

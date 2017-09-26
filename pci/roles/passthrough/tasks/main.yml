@@ -1,0 +1,70 @@
+---
+- block:
+    - name: Add command line options
+      lineinfile:
+        dest: /etc/sysconfig/grub
+        regexp: "^GRUB_CMDLINE_LINUX"
+        line: 'GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200n8 crashkernel=auto rhgb quiet intel_iommu=on iommu=pt"'
+        state: present
+        backup: yes
+
+    - name: Regenerate Grub
+      shell: grub2-mkconfig -o /etc/grub2.cfg
+
+    - name: Reboot machine
+      shell: "nohup sh -c '( sleep 5 ; shutdown -r now )' &"
+      async: 0
+      poll: 0
+      ignore_errors: true
+
+    - name: Wait for Machine Ready
+      local_action:
+        module: wait_for
+        host: "{{inventory_hostname}}"
+        port: 22
+        delay: 15
+        timeout: 600
+  when: "'1029p' in inventory_hostname"
+
+
+- name: Add Filter options to Nova scheduler
+  ini_file:
+    dest: /etc/nova/nova.conf
+    section: "{{item.section}}"
+    option: "{{item.option}}"
+    value:  "{{item.value}}"
+    state: present
+    backup: yes
+  with_items:
+    - { section: filter_scheduler, option: available_filters, value: nova.scheduler.filters.all_filters}
+    - { section: filter_scheduler, option: enabled_filters, value: RetryFilter,AvailabilityZoneFilter,RamFilter,DiskFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,PciPassthroughFilter}
+  when: "'controller' in group_names"
+  notify:
+    - restart controller nova
+
+- name: Add PCI options to controller
+  ini_file:
+    dest: /etc/nova/nova.conf
+    section: pci
+    option: alias
+    value: '{ "vendor_id": "{{vendor_id}}", "product_id":"{{product_id}}", "device_type":"{{device_type}}", "name":"{{name}}" }'
+    state: present
+    backup: yes
+  when: "'controller' in group_names"
+  notify:
+    - restart controller nova
+- name: Add PCI whiteliest to compute
+  ini_file:
+    dest: /etc/nova/nova.conf
+    section: "{{item.section}}"
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+    state: present
+    backup: yes
+  with_items:
+    - {section: pci, option: passthrough_whitelist, value: '{"address": "{{address}}"}'}
+    - {section: pci, option: alias, value: '{ "vendor_id": "{{vendor_id}}", "product_id":"{{product_id}}", "device_type":"{{device_type}}", "name":"{{name}}"}'}
+  when: "'1029p' in inventory_hostname" 
+  notify:
+    - restart compute nova
+

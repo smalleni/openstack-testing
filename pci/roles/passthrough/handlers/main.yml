@@ -1,0 +1,14 @@
+---
+- name: restart controller nova
+  service:
+    name: "{{item}}"
+    state: restarted
+  with_items:
+    - openstack-nova-api
+    - openstack-nova-scheduler
+
+- name: restart compute nova
+  service:
+    name: openstack-nova-compute
+    state: restarted
+
