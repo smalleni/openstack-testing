@@ -1,2 +1,2 @@
 resource_registry:
-OS::TripleO::NodeUserData: ../firstboot/first-boot.yaml
+  OS::TripleO::NodeUserData: ../firstboot/first-boot.yaml
