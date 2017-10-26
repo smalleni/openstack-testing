@@ -75,4 +75,4 @@ outputs:
   # Note this is new-for-kilo, an alternative is returning a value then using
   # get_attr in the parent template instead.
   OS::stack_id:
-value: {get_resource: userdata}
+    value: {get_resource: userdata}
