@@ -2,7 +2,7 @@ parameter_defaults:
   NovaSchedulerDefaultFilters: ['RetryFilter','AvailabilityZoneFilter','RamFilter','DiskFilter','ComputeFilter','ComputeCapabilitiesFilter','ImagePropertiesFilter','ServerGroupAntiAffinityFilter','ServerGroupAffinityFilter','PciPassthroughFilter']
   NovaSchedulerAvailableFilters: ['nova.scheduler.filters.all_filters']
   ControllerExtraConfig:
-    nova::pci::aliases:
+    nova::api::pci_alias:
       - name: 'nvme'
         product_id: 'a804'
         vendor_id: '144d'
