@@ -1,6 +1,7 @@
 function install_dependencies() {
-    yum groupinstall -y "Development Tools" 
+    yum groupinstall -y "Development Tools"
     yum install -y java-1.8.0-openjdk-devel
+    yum install -y perf
     yum install -y cmake
 }
 
@@ -20,12 +21,9 @@ function setup_flame_graphs() {
 
 
 function generate_symbols() {
-    su - odl
-    export JAVA_HOME=/lib/jvm/java-1.8.0-openjdk/
-    pushd /opt/opendaylight/perf-map-agent/out
-    java -cp attach-main.jar:$JAVA_HOME/lib/tools.jar net.virtualvoid.perf.AttachOnce $1
-    popd
-    logout
+    ODL_PID=$1
+    export ODL_PID
+    runuser -u odl -- /bin/sh -c '(export JAVA_HOME=/lib/jvm/java-1.8.0-openjdk/; cd /opt/opendaylight/perf-map-agent/out; java -cp attach-main.jar:$JAVA_HOME/lib/tools.jar net.virtualvoid.perf.AttachOnce $ODL_PID)'
 }
 
 COUNT=0
@@ -38,11 +36,12 @@ do
     CPU_USAGE=$(pidstat | grep ${ODL_PID} | awk '{print$5}')
     if [ $CPU_USAGE > 200 ]; then
         COUNT=$((COUNT+1))
+        echo "capturing perf data $COUNT time"
         generate_symbols $ODL_PID
         sudo perf record -F 99 -a -g -- sleep 60
         sudo chown root /tmp/perf-*.map
         sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > flamegraph_${COUNT}.svg
-        runuser -l odl -c "jstack $ODL_PID" > jstack_${COUNT}.txt 2>&1
+        runuser -u odl -- /bin/sh -c "(jstack $ODL_PID)" > jstack_${COUNT}.txt 2>&1
     fi
     sleep 30
 done
