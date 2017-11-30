@@ -42,11 +42,8 @@ do
         sudo perf record -F 99 -a -g -- sleep 60
         sudo chown root /tmp/perf-*.map
         sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > flamegraph_${COUNT}.svg
+        runuser -l odl -c "jstack $ODL_PID" > jstack_${COUNT}.txt 2>&1
     fi
     sleep 30
 done
-
-
-
-
 
