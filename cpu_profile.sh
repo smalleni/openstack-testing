@@ -33,7 +33,8 @@ setup_perf_map_agent
 setup_flame_graphs
 while true
 do
-    CPU_USAGE=$(pidstat | grep java | grep ${ODL_PID} | awk '{print$5}')
+    pidstat -p ${ODL_PID} 1 2 | tee output.txt
+    CPU_USAGE=$(cat output.txt | awk 'FNR == 5 {print$5}')
     INT_CPU_USAGE=${CPU_USAGE%.*}
     if [ $INT_CPU_USAGE -gt 200 ]; then
         echo "capturing perf data $COUNT time"
