@@ -36,13 +36,14 @@ do
     pidstat -p ${ODL_PID} 1 2 | tee output.txt
     CPU_USAGE=$(cat output.txt | awk 'FNR == 5 {print$5}')
     INT_CPU_USAGE=${CPU_USAGE%.*}
+    echo "cpu usage is $INT_CPU_USAGE"
     if [ $INT_CPU_USAGE -gt 200 ]; then
         echo "capturing perf data $COUNT time"
         generate_symbols $ODL_PID
         sudo perf record -F 99 -a -g -- sleep 60
         sudo chown root /tmp/perf-*.map
-        sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > flamegraph_${COUNT}.svg
-        runuser -u odl -- /bin/sh -c "(jstack $ODL_PID)" > jstack_${COUNT}.txt 2>&1
+        sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > flamegraph_${COUNT}_${INT_CPU_USAGE}.svg
+        runuser -u odl -- /bin/sh -c "(jstack $ODL_PID)" > jstack_${COUNT}_${INT_CPU_USAGE}.txt 2>&1
     fi
     sleep 30
 done
