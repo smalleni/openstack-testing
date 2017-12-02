@@ -39,6 +39,7 @@ do
     INT_CPU_USAGE=${CPU_USAGE%.*}
     echo "cpu usage is $INT_CPU_USAGE"
     if [ $INT_CPU_USAGE -gt 200 ]; then
+        COUNT=$((COUNT+1))
         echo "capturing perf data $COUNT time"
         generate_symbols $ODL_PID
         sudo perf record -F 99 -a -g -- sleep 60
