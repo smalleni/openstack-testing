@@ -3,6 +3,7 @@ function install_dependencies() {
     yum install -y java-1.8.0-openjdk-devel
     yum install -y perf
     yum install -y cmake
+    yum install -y sysstat
 }
 
 function setup_perf_map_agent() {
@@ -33,8 +34,8 @@ setup_perf_map_agent
 setup_flame_graphs
 while true
 do
-    pidstat -p ${ODL_PID} 1 2 | tee output.txt
-    CPU_USAGE=$(cat output.txt | awk 'FNR == 5 {print$5}')
+    pidstat -p ${ODL_PID} 1 2 > output.txt 2>&1
+    CPU_USAGE=$(cat output.txt | awk 'FNR == 6 {print$4}')
     INT_CPU_USAGE=${CPU_USAGE%.*}
     echo "cpu usage is $INT_CPU_USAGE"
     if [ $INT_CPU_USAGE -gt 200 ]; then
