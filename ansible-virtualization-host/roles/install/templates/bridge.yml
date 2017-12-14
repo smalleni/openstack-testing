@@ -1,0 +1,6 @@
+DEVICE={{bridge_name}}
+TYPE=Bridge
+BOOTPROTO=dhcp
+ONBOOT=yes
+DELAY=0
+

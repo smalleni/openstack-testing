@@ -1,0 +1,9 @@
+---
+# vars file for install
+lab_bridge:
+  interface: em1
+  bridge: br0
+
+provisioning_bridge:
+  interface: em2
+  bridge: br1

@@ -1,0 +1,51 @@
+---
+# tasks file for vm
+
+- name: check for any existing undercloud vms
+  shell:
+    cmd: virsh list | grep undercloud
+  register: undercloud_exists
+
+- name: detroy undercloud vm
+  shell:
+    cmd: virsh destroy undercloud
+  when: undercloud_exists.rc == 0
+
+- name: undefine undercloud vm
+  shell:
+    cmd: virsh undefine undercloud
+  when: undercloud_exists.rc == 0
+
+- name: get rhel image
+  get_url:
+    src: "{{rhel_path}}"
+    dest: /var/lib/images/undercloud
+
+- name: start undercloud vm
+  shell:
+    cmd: >
+      virt-install --import --name=undercloud
+      --virt-type=kvm
+      --disk path=/var/lib/libvirt/images/rhel-guest-image-7.4-191.x86_64.qcow2
+      --vcpus=2 --ram=2048 --network bridge=br1 --network bridge=br0
+      --os-type=linux --os-variant=rhel7 --graphics vnc
+      --serial pty --check path_in_use=off --noautoconsole
+
+- name: wait for vm to come up
+  pause:
+    minutes: 2
+
+- name: Get MAC address of public interface
+  shell:
+    cmd: virsh dumpxml undercloud | grep -w "mac address" | awk NR==1 | cut -d "'" -f2
+  register: mac_address
+
+
+- name: Get IP of undercloud using MAC
+  shell:
+    cmd:  nmap -sP {{lab_cidr}} | grep {{mac_address.stdout}} -B 2 | awk -F\( 'NR==1 {print$2}' | awk -F\) '{print$1}'
+  register: ip
+
+- name: print IP
+  debug:
+    var: "{{ip.out}}"

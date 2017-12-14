@@ -1,0 +1,52 @@
+---
+# tasks file for install
+- name: install virtualization packages
+  yum:
+    name:
+      - qemu-kvm 
+      - qemu-img
+      - virt-install 
+      - libvirt 
+      - libvirt-python 
+      - python-virtinst 
+      - libvirt-client
+      - virt-install
+    state: latest
+
+- name: start libvirtd
+  service:
+    name: libvirtd
+    state: started
+    enabled: true
+
+- name: create the interface configuration files
+  template:
+    src: interface.yml
+    dest: /etc/sysconfig/network-scripts/ifcg-{{item.interface}}
+  vars:
+    interface_name: "{{item.interface}}"
+    bridge_name: "{{item.bridge}}"
+  with_items: 
+    - "{{lab_bridge}}"
+    - "{{provisioning_bridge}}"
+  notify:
+    - restart network
+
+- name: create the bridge configuration files
+  template:
+    src: bridge.yml
+    dest: /etc/sysconfig/network-scripts/ifcg-{{item.bridge}}
+  vars:
+    bridge_name: "{{item.bridge}}"
+  with_items: 
+    - "{{lab_bridge}}"
+    - "{{provisioning_bridge}}"
+  notify:
+    - restart network
+- name: iptables rules for bridges
+  shell:
+    cmd: iptables -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT
+  notify:
+    - save iptables
+    - restart iptables
+
