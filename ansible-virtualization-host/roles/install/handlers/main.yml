@@ -5,3 +5,12 @@
     name: network
     state: restarted
 
+- name: save iptables
+  shell:
+    cmd:
+      iptables-save
+
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
