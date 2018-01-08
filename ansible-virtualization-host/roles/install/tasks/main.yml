@@ -64,4 +64,9 @@
   notify:
     - save iptables
     - restart iptables
+- name: Disable networkmanager
+  service:
+    name: NetworkManager
+    state: stopped
+    enabled: no
 
