@@ -11,7 +11,7 @@
       - virt-manager 
       - libvirt-client
       - virt-install
-      - iptables
+      - iptables-services
     state: latest
 
 - name: start libvirtd
@@ -30,6 +30,7 @@
   with_items: 
     - "{{lab_bridge}}"
     - "{{provisioning_bridge}}"
+    - "{{external_bridge}}"
   notify:
     - restart network
 
@@ -42,6 +43,7 @@
   with_items: 
     - "{{lab_bridge}}"
     - "{{provisioning_bridge}}"
+    - "{{external_bridge}}"
   notify:
     - restart network
 
@@ -70,3 +72,9 @@
     state: stopped
     enabled: no
 
+- name: Ansible no strict host checking
+  ini_file:
+    path: /etc/ansible/asnbile.cfg
+    section: defaults
+    option: host_key_checking
+    value: False

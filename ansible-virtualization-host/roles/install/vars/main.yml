@@ -7,3 +7,8 @@ lab_bridge:
 provisioning_bridge:
   interface: em2
   bridge: br1
+
+external_bridge:
+  interface: p2p1.200
+  bridge: br2
+

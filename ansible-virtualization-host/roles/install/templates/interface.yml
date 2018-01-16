@@ -1,6 +1,6 @@
 DEVICE={{ interface_name }}
 ONBOOT=yes
-BOOTPROTO=dhcp
+BOOTPROTO=none
 BRIDGE={{ bridge_name }}
 MTU=1500
 
