@@ -1,19 +1,21 @@
-export PASSWD=$(sudo crudini --get /etc/ironic-inspector/inspector.conf swift password)
+source ~/stackrc
 uuids=$(openstack baremetal node list --format value -c UUID)
-node_type=6048r
+node_type=yamaha
+disk=/dev/sda
 mkdir ~/$node_type
 pushd ~/$node_type > /dev/null
 for uuid in $uuids; do
-    node=$(ironic node-show $uuid | grep $node_type)
+    node=$(openstack baremetal node show $uuid | grep driver_info | grep $node_type)
     if [ "$node" != "" ]
         then
-            swift -q -U service:ironic -K $PASSWD download ironic-inspector inspector_data-$uuid 2> /dev/null
+            openstack baremetal introspection data save $uuid > ~/$node_type/$uuid
     fi
 done
 popd > /dev/null
-for f in $(ls ~/$node_type/); do echo -n $f | sed s/inspector_data-//g; echo -n " "; cat ~/$node_type/$f | jq '.inventory.disks' | grep -A 4 sdak | grep wwn\" | tail -1 | awk {'print $2'} | sed -e s/,//g -e s/\"//g;  done > ~/uuid_to_wwn
+for f in $(ls ~/$node_type/); do echo -n $f ; echo -n " "; cat ~/$node_type/$f | jq '.inventory.disks' | grep -B 4 $disk | grep -w wwn | awk {'print $2'} | sed -e s/,//g -e s/\"//g;  done > ~/uuid_to_wwn-${node_type}
 while read UUID WWN ; do
       echo "Setting root disk on node $UUID with wwn $WWN"
-      ironic node-update $UUID remove properties/root_device
-      ironic node-update $UUID add properties/root_device="{\"wwn\": \"$WWN\"}"
-done < <(cat ~/uuid_to_wwn)
+      #openstack baremetal node unset $UUID --property root_device
+      openstack baremetal node set $UUID --property root_device="{\"wwn\": \"$WWN\"}"
+done < ~/uuid_to_wwn-${node_type}
+
