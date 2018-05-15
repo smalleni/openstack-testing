@@ -11,11 +11,11 @@ for node_type in "${!node_to_profile[@]}"
         echo "Setting profile for node type $node_type"
         for i in $(openstack baremetal node list --format value -c UUID)
             do  
-                node=$(ironic node-show $i | grep $node_type)
+                node=$(openstack baremetal node show $i | grep driver_info | grep $node_type)
                 if [ "$node" != "" ]
                     then
                         echo "Updating node $i with profile ${node_to_profile[$node_type]}"
-                        ironic node-update $i replace properties/capabilities=profile:${node_to_profile[$node_type]}
+                        openstack baremetal node set $i --property capabilities=profile:${node_to_profile[$node_type]},boot_option:local
                 fi
             done
     done
