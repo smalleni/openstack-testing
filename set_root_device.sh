@@ -11,7 +11,7 @@ for uuid in $uuids; do
     fi
 done
 popd > /dev/null
-for f in $(ls ~/$node_type/); do echo -n $f ; echo -n " "; cat ~/$node_type/$f | jq '.inventory.disks' | grep root_disk -A 11 | grep wwn | head -1 | awk {'print $2'} | sed -e s/,//g -e s/\"//g;  done > ~/uuid_to_wwn-${node_type}
+for f in $(ls ~/$node_type/); do echo -n $f ; echo -n " "; cat ~/$node_type/$f | jq '.root_disk' | grep -w wwn | awk {'print $2'} | sed -e s/,//g -e s/\"//g;  done > ~/uuid_to_wwn-${node_type}
 while read UUID WWN ; do
       echo "Setting root disk on node $UUID with wwn $WWN"
       #openstack baremetal node unset $UUID --property root_device
