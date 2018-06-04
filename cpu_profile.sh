@@ -28,7 +28,7 @@ function generate_symbols() {
 }
 
 COUNT=0
-ODL_PID=$(ps aux | grep opendaylight | awk 'FNR == 1 {print$2}')
+ODL_PID=$(ps aux | grep opendaylight | awk 'FNR == 2 {print$2}')
 install_dependencies
 setup_perf_map_agent
 setup_flame_graphs
