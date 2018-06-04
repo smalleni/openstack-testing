@@ -22,7 +22,13 @@ do
         COUNT=$((COUNT+1))
         echo "capturing perf data $COUNT time"
         sudo perf record -F 99 -a -g -- sleep 30
-        sudo docker exec opendaylight_api perf-map-agent.sh
+        while true; do
+             sudo docker exec opendaylight_api perf-map-agent.sh
+             if [ "$?" -eq 0 ]; then
+                 break
+             fi
+             sleep 5
+        done
         sudo docker cp /tmp/perf-${ODL_CONTAINER_PID}.map /tmp/
         mv /tmp/perf-${ODL_CONTAINER_PID}.map /tmp/perf-${ODL_HOST_PID}.map
         sudo chown root /tmp/perf-*.map
