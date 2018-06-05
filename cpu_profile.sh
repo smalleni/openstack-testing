@@ -28,7 +28,7 @@ function generate_symbols() {
 }
 
 COUNT=0
-ODL_PID=$(ps aux | grep opendaylight | awk 'FNR == 2 {print$2}')
+ODL_PID=$(pgrep java)
 install_dependencies
 setup_perf_map_agent
 setup_flame_graphs
@@ -45,7 +45,7 @@ do
         sudo perf record -F 99 -a -g -- sleep 30
         generate_symbols $ODL_PID
         sudo chown root /tmp/perf-*.map
-        sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > flamegraph_${COUNT}_${INT_CPU_USAGE}.svg
+        sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > "flamegraph_${COUNT}_${INT_CPU_USAGE}_${DATE}.svg"
     fi
     sleep 5
 done
