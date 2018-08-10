@@ -12,17 +12,17 @@ COUNT=0
 ODL_HOST_PID=$(pgrep java)
 ODL_CONTAINER_PID=$(docker exec opendaylight_api ps aux | pgrep java)
 while true; do
-    sudo docker cp install_containers.sh opendaylight_api:/usr/local/bin
+    sudo docker cp install_containers.sh opendaylight_api:/usr/local/bin/
      if [ "$?" -eq 0 ]; then
                  break
      fi
      sleep 1
 done
 while true; do
-    sudo docker cp perf-map-agent.sh opendaylight_api:/usr/local/bin
+    sudo docker cp perf-map-agent.sh opendaylight_api:/usr/local/bin/
     if [ "$?" -eq 0 ]; then
          break
-         fi
+     fi
     sleep 1
 done
 sudo docker exec --user root opendaylight_api install_containers.sh 
