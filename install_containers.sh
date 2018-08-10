@@ -2,7 +2,7 @@
 function install_dependencies() {
     yum groupinstall -y "Development Tools"
     yum install -y java-1.8.0-openjdk-devel
-    debuginfo-install java-1.8.0-openjdk
+    debuginfo-install -y java-1.8.0-openjdk
     yum install -y cmake
 }
 
