@@ -10,7 +10,7 @@ function setup_flame_graphs() {
 
 COUNT=0
 ODL_HOST_PID=$(pgrep java)
-ODL_CONTAINER_PID=$(docker exec opendaylight_api ps aux | pgrep java)
+ODL_CONTAINER_PID=$(docker exec opendaylight_api pgrep java)
 while true; do
     sudo docker cp install_containers.sh opendaylight_api:/usr/local/bin/
      if [ "$?" -eq 0 ]; then
