@@ -5,7 +5,9 @@ function install_dependencies() {
 
 }
 function setup_flame_graphs() {
-    git clone --depth=1 https://github.com/brendangregg/FlameGraph
+    if [ ! -d FlameGraph ]; then
+        git clone --depth=1 https://github.com/brendangregg/FlameGraph
+    fi
 }
 
 COUNT=0
@@ -34,7 +36,7 @@ do
     CPU_USAGE=$(cat output.txt | awk 'FNR == 6 {print$4}')
     INT_CPU_USAGE=${CPU_USAGE%.*}
     echo "cpu usage is $INT_CPU_USAGE"
-    if [ "$INT_CPU_USAGE" -gt 0 ]; then
+    if [ "$INT_CPU_USAGE" -ge 100 ]; then
         echo "if"
         COUNT=$((COUNT+1))
         echo "capturing perf data $COUNT time"
