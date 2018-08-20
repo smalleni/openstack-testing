@@ -2,6 +2,8 @@
 function install_dependencies() {
     sudo yum install -y perf
     sudo yum install -y sysstat
+    sudo yum install -y java-1.8.0-openjdk-devel
+    sudo debuginfo-install -y java-1.8.0-openjdk
 
 }
 function setup_flame_graphs() {
@@ -51,7 +53,7 @@ do
         done
         mv /tmp/perf-${ODL_CONTAINER_PID}.map /tmp/perf-${ODL_HOST_PID}.map
         sudo chown root /tmp/perf-*.map
-        DATE=$(date '+%Y-%m-%d %H:%M:%S')
+        DATE=$(date '+%Y-%m-%d_%H:%M:%S')
         sudo perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl --color=java --hash > "flamegraph_${COUNT}_${INT_CPU_USAGE}_${DATE}.svg"
     fi
     sleep 5
