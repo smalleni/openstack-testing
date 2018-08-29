@@ -11,6 +11,9 @@ function generate_jstack() {
     runuser -u odl -- /bin/sh -c '(jstack $ODL_CONTAINER_PID)' > /tmp/jstack_${COUNT}_${INT_CPU_USAGE}.txt 2>&1
 }
 function generate_jmap() {
+    export ODL_CONTAINER_PID
+    export $COUNT
+    export $INT_CPU_USAGE
     runuser -u odl -- /bin/sh -c '(jmap -dump:format=b,file=/tmp/HeapDump_${COUNT}_${INT_CPU_USAGE}.hprof $ODL_CONTAINER_PID)'
 }
 generate_symbols
