@@ -42,7 +42,7 @@ do
         echo "if"
         COUNT=$((COUNT+1))
         echo "capturing perf data $COUNT time"
-        sudo perf record -F 99 -a -g -- sleep 5
+        sudo perf record -F 99 -a -g -- sleep 15
         sudo docker exec --user root opendaylight_api perf-map-agent.sh $ODL_CONTAINER_PID $COUNT $INT_CPU_USAGE
         while true; do
             sudo docker cp opendaylight_api:/tmp/perf-${ODL_CONTAINER_PID}.map /tmp/
@@ -52,7 +52,14 @@ do
             sleep 1
         done
         while true; do
-            sudo docker cp opendaylight_api:jstack_${COUNT}_${INT_CPU_USAGE}.txt ..
+            sudo docker cp opendaylight_api:/tmp/jstack_${COUNT}_${INT_CPU_USAGE}.txt .
+            if [ "$?" -eq 0 ]; then
+                 break
+            fi
+            sleep 1
+        done
+        while true; do
+            sudo docker cp opendaylight_api:/tmp/HeapDump_${COUNT}_${INT_CPU_USAGE}.hprof .
             if [ "$?" -eq 0 ]; then
                  break
             fi
