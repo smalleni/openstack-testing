@@ -34,11 +34,11 @@ install_dependencies
 setup_flame_graphs
 while true
 do
-    pidstat -p ${ODL_HOST_PID} 1 2 > output.txt 2>&1
-    CPU_USAGE=$(cat output.txt | awk 'FNR == 6 {print$4}')
+    top -b -n 1 > top.txt
+    CPU_USAGE=$(cat top.txt | grep ${ODL_HOST_PID} | grep java | awk {'print$9'})
     INT_CPU_USAGE=${CPU_USAGE%.*}
     echo "cpu usage is $INT_CPU_USAGE"
-    if [ "$INT_CPU_USAGE" -ge 100 ]; then
+    if [ "$INT_CPU_USAGE" -ge 500 ]; then
         echo "if"
         COUNT=$((COUNT+1))
         echo "capturing perf data $COUNT time"
@@ -46,6 +46,13 @@ do
         sudo docker exec --user root opendaylight_api perf-map-agent.sh $ODL_CONTAINER_PID $COUNT $INT_CPU_USAGE
         while true; do
             sudo docker cp opendaylight_api:/tmp/perf-${ODL_CONTAINER_PID}.map /tmp/
+            if [ "$?" -eq 0 ]; then
+                 break
+            fi
+            sleep 1
+        done
+        while true; do
+            sudo docker cp opendaylight_api:jstack_${COUNT}_${INT_CPU_USAGE}.txt ..
             if [ "$?" -eq 0 ]; then
                  break
             fi
