@@ -11,7 +11,7 @@ for i in $(openstack server list --status active -f value -c ID); do
         echo Ping count is $count
         if [ "$count" -ne 1 ]
            then
-           ssh -t $i -o StrictHostKeyChecking=no -l heat-admin "ifup enp2s0f0"
+           ssh -t $i -o StrictHostKeyChecking=no -l heat-admin "sudo ifup enp2s0f0"
         fi
     fi
 done
