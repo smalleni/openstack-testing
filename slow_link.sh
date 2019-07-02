@@ -1,4 +1,5 @@
 node_type=5039ms
+while true; do
 for i in $(openstack server list --status active -f value -c ID); do
     echo server is $i
     node_uuid=$(openstack baremetal node list -f value | grep $i | awk {'print$1'})
@@ -15,4 +16,4 @@ for i in $(openstack server list --status active -f value -c ID); do
         fi
     fi
 done
-
+done
