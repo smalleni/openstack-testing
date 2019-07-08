@@ -9,11 +9,17 @@ for i in $(openstack server list --status active -f value -c ID); do
         ip=$(openstack server show $i -f value | grep ctlplane | awk -F= {'print$2'})
         echo checking $node_name at IP $ip
         count=$(ssh $ip -o StrictHostKeyChecking=no -l heat-admin "ping -c 1 clock1.rdu2.redhat.com | grep received | awk {'print \$4'}")
-        echo Ping count is $count
-        if [ "$count" -ne 1 ]
+        if [ "$?" -ne 0] || [ "$count" -ne 1 ]
            then
+           ssh -t $i -o StrictHostKeyChecking=no -l heat-admin "sudo bash -c 'cat << 'EOF' > /etc/sysconfig/network-scripts/ifcfg-enp2s0f0
+DEVICE="enp2s0f0"
+BOOTPROTO="dhcp"
+ONBOOT="yes"
+TYPE="Ethernet"
+EOF'"
            ssh -t $i -o StrictHostKeyChecking=no -l heat-admin "sudo ifup enp2s0f0"
         fi
     fi
 done
 done
+
